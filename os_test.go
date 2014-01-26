@@ -1,4 +1,4 @@
-package uaparser
+package ua
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ var osParser *Parser = nil
 
 func osInitParser(regexFile string) {
 	if osParser == nil {
-		osParser = New(regexFile)
+		osParser = NewFromFile(regexFile)
 	}
 }
 

@@ -1,4 +1,4 @@
-package uaparser
+package ua
 
 import (
 	"regexp"
@@ -13,17 +13,24 @@ type Os struct {
 }
 
 type OsPattern struct {
-	Regexp          *regexp.Regexp
-	Regex           string
-	OsReplacement   string
-	OsV1Replacement string
-	OsV2Replacement string
+	regexp          *regexp.Regexp
+	Regex           string `yaml:"regex"`
+	OsReplacement   string `yaml:"os_replacement"`
+	OsV1Replacement string `yaml:"os_v1_replacement"`
+	OsV2Replacement string `yaml:"os_v2_replacement"`
+}
+
+func (os *OsPattern) Regexp() *regexp.Regexp {
+	if os.regexp == nil {
+		os.regexp = regexp.MustCompile(os.Regex)
+	}
+	return os.regexp
 }
 
 func (osPattern *OsPattern) Match(line string, os *Os) {
-	bytes := osPattern.Regexp.FindStringSubmatch(line)
+	bytes := osPattern.Regexp().FindStringSubmatch(line)
 	if len(bytes) > 0 {
-		groupCount := osPattern.Regexp.NumSubexp()
+		groupCount := osPattern.Regexp().NumSubexp()
 
 		if len(osPattern.OsReplacement) > 0 {
 			os.Family = osPattern.OsReplacement

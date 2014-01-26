@@ -1,4 +1,4 @@
-package uaparser
+package ua
 
 import (
 	"regexp"
@@ -13,17 +13,24 @@ type UserAgent struct {
 }
 
 type UserAgentPattern struct {
-	Regexp            *regexp.Regexp
-	Regex             string
-	FamilyReplacement string
-	V1Replacement     string
-	V2Replacement     string
+	regexp            *regexp.Regexp
+	Regex             string `yaml:"regex"`
+	FamilyReplacement string `yaml:"family_replacement"`
+	V1Replacement     string `yaml:"v1_replacement"`
+	V2Replacement     string `yaml:"v2_replacement"`
+}
+
+func (u *UserAgentPattern) Regexp() *regexp.Regexp {
+	if u.regexp == nil {
+		u.regexp = regexp.MustCompile(u.Regex)
+	}
+	return u.regexp
 }
 
 func (uaPattern *UserAgentPattern) Match(line string, ua *UserAgent) {
-	bytes := uaPattern.Regexp.FindStringSubmatch(line)
+	bytes := uaPattern.Regexp().FindStringSubmatch(line)
 	if len(bytes) > 0 {
-		groupCount := uaPattern.Regexp.NumSubexp()
+		groupCount := uaPattern.Regexp().NumSubexp()
 
 		if len(uaPattern.FamilyReplacement) > 0 {
 			if strings.Contains(uaPattern.FamilyReplacement, "$1") && groupCount >= 1 && len(bytes) >= 2 {

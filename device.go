@@ -1,4 +1,4 @@
-package uaparser
+package ua
 
 import (
 	"regexp"
@@ -10,28 +10,46 @@ type Device struct {
 }
 
 type DevicePattern struct {
-	Regexp            *regexp.Regexp
-	Regex             string
-	DeviceReplacement string
+	regexp      *regexp.Regexp
+	Regex       string `yaml:"regex"`
+	Replacement string `yaml:"device_replacement"`
 }
 
-func (dvcPattern *DevicePattern) Match(line string, dvc *Device) {
-	bytes := dvcPattern.Regexp.FindStringSubmatch(line)
-	if len(bytes) > 0 {
-		groupCount := dvcPattern.Regexp.NumSubexp()
-
-		if len(dvcPattern.DeviceReplacement) > 0 {
-			if strings.Contains(dvcPattern.DeviceReplacement, "$1") && groupCount >= 1 && len(bytes) >= 2 {
-				dvc.Family = strings.Replace(dvcPattern.DeviceReplacement, "$1", bytes[1], 1)
-			} else {
-				dvc.Family = dvcPattern.DeviceReplacement
-			}
-		} else if groupCount >= 1 {
-			dvc.Family = bytes[1]
-		}
+func (d *DevicePattern) Regexp() *regexp.Regexp {
+	if d.regexp == nil {
+		d.regexp = regexp.MustCompile(d.Regex)
 	}
+	return d.regexp
 }
 
-func (dvc *Device) ToString() string {
-	return dvc.Family
+func (d *DevicePattern) HasSubexp() bool {
+	return d.Regexp().NumSubexp() >= 1
+}
+
+func (d *DevicePattern) Match(line string) (*Device, bool) {
+	matches := d.Regexp().FindStringSubmatch(line)
+	if len(matches) > 0 {
+		device := new(Device)
+		if d.Replacement != "" {
+			if strings.Contains(d.Replacement, "$1") && d.HasSubexp() && len(matches) >= 2 {
+				device.Family = strings.Replace(d.Replacement, "$1", matches[1], 1)
+			} else {
+				device.Family = d.Replacement
+			}
+		} else if d.HasSubexp() {
+			device.Family = matches[1]
+		}
+		return device, true
+	}
+	return nil, false
+}
+
+func (d *Device) String() string {
+	return d.Family
+}
+
+func unknownDevice() *Device {
+	d := new(Device)
+	d.Family = "Other"
+	return d
 }
