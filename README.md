@@ -4,14 +4,15 @@ Usage
     package main
 
     import (
-      "../uaparser" // You could change this to a github repo as well
       "fmt"
+
+      "bitbucket.org/ydworld/ua"
     )
 
     func main() {
       testStr := "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true"
       regexFile := "../../regexes.yaml"
-      parser := uaparser.New(regexFile)
+      parser := ua.NewFromFile(regexFile)
       client := parser.Parse(testStr)
       fmt.Println(client.UserAgent.Family)  // "Amazon Silk"
       fmt.Println(client.UserAgent.Major)   // "1"
