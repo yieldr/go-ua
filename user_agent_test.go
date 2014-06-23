@@ -24,8 +24,19 @@ func uaInitParser(regexFile string) {
 	}
 }
 
+func uaInitParserNew(regexFile string) {
+
+	if uaParser == nil {
+		uaParser, err := NewParser(regexFile)
+		if uaParser != nil {
+			fmt.Println(err.Error())
+		}
+
+	}
+}
+
 func uaHelperTest(file string) bool {
-	uaInitParser(uaDefaultRegexFile)
+	uaInitParserNew(uaDefaultRegexFile)
 	tests := uaInitTesting(file)
 	for _, test := range tests {
 

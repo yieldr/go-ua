@@ -30,6 +30,22 @@ func New() *Parser {
 	return NewFromFile(args.file)
 }
 
+func NewParser(file string) (*Parser, error) {
+	p := new(Parser)
+
+	b, err := ioutil.ReadFile(file)
+	if nil != err {
+		return nil, err
+	}
+
+	err = goyaml.Unmarshal(b, &p)
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
 func NewFromFile(file string) *Parser {
 	p := new(Parser)
 
