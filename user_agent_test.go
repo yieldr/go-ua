@@ -37,6 +37,7 @@ func uaInitParserNew(regexFile string) {
 
 func uaHelperTest(file string) bool {
 	uaInitParserNew(uaDefaultRegexFile)
+	uaInitParser(uaDefaultRegexFile)
 	tests := uaInitTesting(file)
 	for _, test := range tests {
 
