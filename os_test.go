@@ -20,7 +20,7 @@ var osParser *Parser = nil
 
 func osInitParser(regexFile string) {
 	if osParser == nil {
-		osParser = NewFromFile(regexFile)
+		osParser, _ = NewParser(regexFile)
 	}
 }
 

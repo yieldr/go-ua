@@ -24,7 +24,7 @@ func TestDevice(t *testing.T) {
 		t.Fatal("Unable to unmarshal yaml.")
 	}
 
-	parser := NewFromFile("regexes.yaml")
+	parser, _ := NewParser("regexes.yaml")
 
 	if len(tests) == 0 {
 		t.Skip("No test cases found")
