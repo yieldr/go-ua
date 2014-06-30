@@ -3,15 +3,16 @@ package ua
 import (
 	"fmt"
 	"io/ioutil"
-	"launchpad.net/goyaml"
 	"testing"
+
+	"gopkg.in/yaml.v1"
 )
 
 func uaInitTesting(file string) []map[string]string {
 	fmt.Print(file + ": ")
 	testFile, _ := ioutil.ReadFile(file)
 	testMap := make(map[string][]map[string]string)
-	_ = goyaml.Unmarshal(testFile, &testMap)
+	_ = yaml.Unmarshal(testFile, &testMap)
 	return testMap["test_cases"]
 }
 

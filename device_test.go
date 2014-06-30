@@ -2,8 +2,9 @@ package ua
 
 import (
 	"io/ioutil"
-	"launchpad.net/goyaml"
 	"testing"
+
+	"gopkg.in/yaml.v1"
 )
 
 type TestCase struct {
@@ -19,7 +20,7 @@ func TestDevice(t *testing.T) {
 
 	var tests map[string][]TestCase
 
-	err = goyaml.Unmarshal(b, &tests)
+	err = yaml.Unmarshal(b, &tests)
 	if err != nil {
 		t.Fatal("Unable to unmarshal yaml.")
 	}

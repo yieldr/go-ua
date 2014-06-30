@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"sync"
 
-	"launchpad.net/goyaml"
+	"gopkg.in/yaml.v1"
 )
 
 type Parser struct {
@@ -124,7 +124,7 @@ func LoadPatterns(file string) (p Patterns, err error) {
 	if nil != err {
 		return
 	}
-	err = goyaml.Unmarshal(b, &p)
+	err = yaml.Unmarshal(b, &p)
 	if err != nil {
 		return
 	}
