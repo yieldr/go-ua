@@ -13,7 +13,7 @@ type TestCase struct {
 }
 
 func TestDevice(t *testing.T) {
-	b, err := ioutil.ReadFile("./resources/test_device.yaml")
+	b, err := ioutil.ReadFile("../resources/test_device.yaml")
 	if err != nil {
 		t.Fatal("Unable to locate resource file.")
 	}
@@ -25,7 +25,10 @@ func TestDevice(t *testing.T) {
 		t.Fatal("Unable to unmarshal yaml.")
 	}
 
-	parser, _ := NewParser("regexes.yaml")
+	parser, err := NewParser("../regexes.yaml")
+	if err != nil {
+		t.Fatal("Unable to parse regex file")
+	}
 
 	if len(tests) == 0 {
 		t.Skip("No test cases found")
